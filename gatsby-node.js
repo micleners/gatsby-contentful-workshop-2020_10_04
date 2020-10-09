@@ -6,7 +6,7 @@ exports.createPages = ({ graphql, actions }) => {
   return graphql(
     `
       {
-        allMarkdownRemark {
+        allMarkdownRemark(filter: { frontmatter: { slug: { ne: null } } }) {
           edges {
             node {
               id

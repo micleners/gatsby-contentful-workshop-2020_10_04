@@ -8,7 +8,9 @@ import SEO from "../components/seo"
 const Blog = () => {
   const data = useStaticQuery(graphql`
     {
-      blogs: allMarkdownRemark {
+      blogs: allMarkdownRemark(
+        filter: { frontmatter: { slug: { ne: null } } }
+      ) {
         edges {
           node {
             html

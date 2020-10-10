@@ -18,6 +18,14 @@ exports.createPages = ({ graphql, actions }) => {
             }
           }
         }
+        allContentfulEvents {
+          edges {
+            node {
+              id
+              slug
+            }
+          }
+        }
       }
     `
   )
@@ -34,6 +42,18 @@ exports.createPages = ({ graphql, actions }) => {
           component: slash(blogPostTemplate),
           context: {
             slug: edge.node.frontmatter.slug,
+            id: edge.node.id,
+          },
+        })
+      })
+
+      const eventTemplate = path.resolve("./src/templates/event.js")
+      result.data.allContentfulEvents.edges.forEach(edge => {
+        createPage({
+          path: `/event/${edge.node.slug}`,
+          component: slash(eventTemplate),
+          context: {
+            slug: edge.node.slug,
             id: edge.node.id,
           },
         })

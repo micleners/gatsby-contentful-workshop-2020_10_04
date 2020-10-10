@@ -1,5 +1,6 @@
-import { useStaticQuery } from "gatsby"
+import { useStaticQuery, Link } from "gatsby"
 import React from "react"
+import { Flex, Box } from "rebass"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -25,7 +26,7 @@ const Events = () => {
                 bio
               }
             }
-            datetime(formatString: "MMMM DD, YYYY")
+            datetime(formatString: "hh:mm, MMMM DD, YYYY")
           }
         }
       }
@@ -33,7 +34,6 @@ const Events = () => {
   `)
 
   const events = data.events.edges.map(event => event.node)
-  console.log(events)
 
   return (
     <Layout>
@@ -41,15 +41,43 @@ const Events = () => {
       <h1>Events</h1>
       {events &&
         events.map(event => {
-          const { description, location, slug, title, presenter } = event
-          console.log(description)
-          console.log(location)
-          console.log(slug)
-          console.log(title)
-          console.log(presenter)
+          const {
+            location,
+            slug,
+            title,
+            presenter,
+            datetime,
+          } = event
 
           return (
-            <div key={slug}>{title}</div>
+            <Flex flexDirection="column" mb="3" key={slug}>
+              <Link to={`/event/${slug}`}>{title}</Link>
+              {location && (
+                <Box>
+                  <em>{location}</em>
+                </Box>
+              )}
+              {datetime && (
+                <Box>
+                  <em>{datetime}</em>
+                </Box>
+              )}
+              {presenter && presenter.length === 1 && (
+                <Box fontSize={2}>By: {presenter[0].name}</Box>
+              )}
+              {presenter && presenter.length > 1 && (
+                <Box fontSize={2}>
+                  By:
+                  {presenter.map((pres, index) => {
+                    if (index !== presenter.length - 1)
+                      return <span key={pres.id}> {pres.name},</span>
+                    else {
+                      return <span key={pres.id}> and {pres.name}</span>
+                    }
+                  })}
+                </Box>
+              )}
+            </Flex>
           )
         })}
     </Layout>
